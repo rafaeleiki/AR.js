@@ -50,7 +50,7 @@ AFRAME.registerComponent('arjs-anchor', {
 
 		// honor object visibility
 		if( _this.data.changeMatrixMode === 'modelViewMatrix' ){
-			_this.el.object3D.visible = false
+			_this.el.object3D.visible = false;
 		}else if( _this.data.changeMatrixMode === 'cameraTransformMatrix' ){
  			_this.el.sceneEl.object3D.visible = false
 		}else console.assert(false)
@@ -155,7 +155,17 @@ AFRAME.registerComponent('arjs-anchor', {
 		//		honor visibility
 		//////////////////////////////////////////////////////////////////////////////
 		if( _this._arAnchor.parameters.changeMatrixMode === 'modelViewMatrix' ){
-			_this.el.object3D.visible = this._arAnchor.object3d.visible
+		    var changed = _this.el.object3D.visible !== this._arAnchor.object3d.visible;
+		    var visible = this._arAnchor.object3d.visible;
+			_this.el.object3D.visible = this._arAnchor.object3d.visible;
+            if (changed) {
+                if (visible) {
+                    this.el.emit('markerFound');
+                } else {
+                    this.el.emit('markerLost');
+                }
+            }
+
 		}else if( _this._arAnchor.parameters.changeMatrixMode === 'cameraTransformMatrix' ){
 			_this.el.sceneEl.object3D.visible = this._arAnchor.object3d.visible
 		}else console.assert(false)
